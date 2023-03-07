@@ -1,0 +1,31 @@
+input:not([type="checkbox"]),
+textarea {
+  padding: 1em;
+  width: 100%;
+  border-radius: var(--radius);
+  border-color: transparent;
+  box-shadow: var(--shadow);
+  background-color: var(--secondary);
+  font: inherit;
+  color: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space);
+}
+
+.form-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--space) / 2);
+}
+
+.invalid-feedback {
+  color: var(--danger);
+}

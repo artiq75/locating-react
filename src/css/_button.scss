@@ -1,0 +1,27 @@
+.btn {
+  padding: 1em;
+  font: inherit;
+  cursor: pointer;
+  border-color: transparent;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.btn.btn-primary {
+  background-color: var(--tertiary);
+}
+
+.btn.btn-danger {
+  background-color: var(--danger);
+  color: inherit;
+}
+
+.btn.small {
+  padding: 0.25em;
+  font-size: 0.8em;
+}
+
+.btn[aria-hidden] {
+  visibility: hidden;
+  opacity: 0;
+}
