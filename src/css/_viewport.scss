@@ -2,14 +2,10 @@
   padding: 1em;
 }
 
-.mapboxgl-map {
+.maplibregl-map {
   min-height: 100%;
   min-width: 100%;
   border-radius: var(--radius);
   color: var(--primary);
-}
-
-.mapboxgl-canvas {
-  min-height: 100%;
-  min-width: 100%;
+  overflow: hidden;
 }
