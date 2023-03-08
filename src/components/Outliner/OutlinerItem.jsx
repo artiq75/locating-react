@@ -1,11 +1,10 @@
-import { useMemo } from 'react'
+import { useContext, useMemo } from 'react'
+import { LocalEventContext } from '../../App'
 
-export default function OutlinerItem({
-  localEvent,
-  onLocalEventDelete,
-  onEditID,
-  localEventEditableID
-}) {
+export default function OutlinerItem({ localEvent }) {
+  const { localEventEditableID, onLocalEventDelete, onEditID } =
+    useContext(LocalEventContext)
+
   const handleEdit = function () {
     onEditID(localEvent.id)
   }

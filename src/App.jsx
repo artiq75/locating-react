@@ -1,8 +1,15 @@
 import Outliner from './components/Outliner/Outliner'
 import Viewport from './components/Viewport'
 import Panel from './components/Panel'
-import { useEffect, useRef, useState } from 'react'
+import { createContext, useEffect, useMemo, useRef, useState } from 'react'
 import Storage, { StorageKey } from '../core/Storage'
+
+export const LocalEventContext = createContext({
+  localEvents: [],
+  localEventEditableID: null,
+  onEditID: (value) => {},
+  onLocalEventDelete: (value) => {}
+})
 
 export default function App() {
   const [localEvents, setLocalEvents] = useState([])
@@ -50,15 +57,23 @@ export default function App() {
     setLocalEventEditableID(id)
   }
 
+  const value = useMemo(() => {
+    return {
+      localEvents,
+      localEventEditableID,
+      onLocalEventDelete: handleLocalEventDelete,
+      onEditID: handleEditID
+    }
+  }, [localEvents, localEventEditableID])
+
   return (
     <>
-      <Outliner
-        localEvents={localEvents}
-        onLocalEventDelete={handleLocalEventDelete}
-        onLocalEventDeleteAll={handleLocalEventDeleteAll}
-        onEditID={handleEditID}
-        localEventEditableID={localEventEditableID}
-      />
+      <LocalEventContext.Provider value={value}>
+        <Outliner
+          localEvents={localEvents}
+          onLocalEventDeleteAll={handleLocalEventDeleteAll}
+        />
+      </LocalEventContext.Provider>
       <Viewport ref={map} />
       <Panel
         map={map}
