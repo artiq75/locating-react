@@ -1,17 +1,28 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
-export default function Panel({ map }) {
+export default function Panel({ map, onLocalEventAdd }) {
+  const form = useRef(null)
+
   useEffect(() => {
-    if (map.current) {
-      map.current.on('click', (e) => {
-        console.log(e)
-      })
-    }
+    map.current?.on('click', (e) => {
+      form.current.elements['longitude'].value = e.lngLat.lng
+      form.current.elements['latitude'].value = e.lngLat.lat
+    })
   }, [])
+
+  const handleSubmit = function (e) {
+    e.preventDefault()
+
+    const data = new FormData(form.current)
+
+    onLocalEventAdd(Object.fromEntries(data))
+    
+    form.current.reset()
+  }
 
   return (
     <aside className="panel">
-      <form>
+      <form ref={form} onSubmit={handleSubmit} noValidate={true}>
         <p className="form-group">
           <label htmlFor="title">Titre</label>
           <input type="text" name="title" id="title" />
@@ -26,7 +37,7 @@ export default function Panel({ map }) {
             <input type="number" name="latitude" id="latitude" />
           </p>
         </div>
-        <div className="g2 gap1">
+        {/* <div className="g2 gap1">
           <p className="form-group">
             <label htmlFor="start">Début</label>
             <input type="datetime-local" name="start" id="start" />
@@ -35,7 +46,7 @@ export default function Panel({ map }) {
             <label htmlFor="end">Fin</label>
             <input type="datetime-local" name="end" id="end" />
           </p>
-        </div>
+        </div> */}
         <p className="form-group">
           <label htmlFor="description">Déscription</label>
           <textarea
