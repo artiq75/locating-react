@@ -1,17 +1,19 @@
-import Outliner from './components/Outliner'
+import Outliner from './components/Outliner/Outliner'
 import Viewport from './components/Viewport'
 import Panel from './components/Panel'
 import { useEffect, useRef, useState } from 'react'
-import Storage from '../core/Storage'
-
-const LOCAL_EVENT_STORAGE_KEY = 'localEvent'
+import Storage, { StorageKey } from '../core/Storage'
 
 export default function App() {
   const [localEvents, setLocalEvents] = useState([])
+  const [localEventEditableID, setLocalEventEditableID] = useState(null)
   const map = useRef(null)
 
   useEffect(() => {
-    setLocalEvents(Storage.get(LOCAL_EVENT_STORAGE_KEY))
+    const storage = Storage.get(StorageKey.LOCAL_EVENT)
+    if (storage) {
+      setLocalEvents(storage)
+    }
   }, [])
 
   const handleLocalEventAdd = function (localEvent) {
@@ -20,21 +22,29 @@ export default function App() {
       ...localEvent
     }
     setLocalEvents((state) =>
-      Storage.set(LOCAL_EVENT_STORAGE_KEY, [newLocalEvent, ...state])
+      Storage.set(StorageKey.LOCAL_EVENT, [newLocalEvent, ...state])
     )
   }
 
   const handleLocalEventEdit = function (localEvent) {
     const newLocalEvents = localEvents.map((le) => {
-      if (le.id !== localEvent.id) return
+      if (le.id !== localEvent.id) return le
       return localEvent
     })
-    setLocalEvents(Storage.set(LOCAL_EVENT_STORAGE_KEY, newLocalEvents))
+    setLocalEvents(Storage.set(StorageKey.LOCAL_EVENT, newLocalEvents))
   }
 
   const handleLocalEventDelete = function (localEvent) {
     const newLocalEvents = localEvents.filter((le) => le.id !== localEvent.id)
-    setLocalEvents(Storage.set(LOCAL_EVENT_STORAGE_KEY, newLocalEvents))
+    setLocalEvents(Storage.set(StorageKey.LOCAL_EVENT, newLocalEvents))
+  }
+
+  const handleLocalEventDeleteAll = function () {
+    setLocalEvents(Storage.set(StorageKey.LOCAL_EVENT, []))
+  }
+
+  const handleEditID = function (id) {
+    setLocalEventEditableID(id)
   }
 
   return (
@@ -42,9 +52,19 @@ export default function App() {
       <Outliner
         localEvents={localEvents}
         onLocalEventDelete={handleLocalEventDelete}
+        onLocalEventDeleteAll={handleLocalEventDeleteAll}
+        onEditID={handleEditID}
+        localEventEditableID={localEventEditableID}
       />
       <Viewport ref={map} />
-      <Panel map={map} onLocalEventAdd={handleLocalEventAdd} />
+      <Panel
+        map={map}
+        localEvents={localEvents}
+        onLocalEventAdd={handleLocalEventAdd}
+        onLocalEventEdit={handleLocalEventEdit}
+        localEventEditableID={localEventEditableID}
+        onEditID={setLocalEventEditableID}
+      />
     </>
   )
 }

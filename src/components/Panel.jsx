@@ -1,6 +1,13 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
-export default function Panel({ map, onLocalEventAdd }) {
+export default function Panel({
+  map,
+  localEvents,
+  onLocalEventAdd,
+  onLocalEventEdit,
+  localEventEditableID,
+  onEditID
+}) {
   const form = useRef(null)
 
   useEffect(() => {
@@ -10,19 +17,44 @@ export default function Panel({ map, onLocalEventAdd }) {
     })
   }, [])
 
+  useEffect(() => {
+    if (!localEventEditableID) form.current.reset()
+    const localEvent = localEvents.find((l) => l.id === localEventEditableID)
+    for (const field in localEvent) {
+      if (!form.current.elements[field]) continue
+      form.current.elements[field].value = localEvent[field]
+    }
+  }, [localEventEditableID])
+
   const handleSubmit = function (e) {
     e.preventDefault()
 
     const data = new FormData(form.current)
 
-    onLocalEventAdd(Object.fromEntries(data))
-    
+    if (!localEventEditableID) {
+      onLocalEventAdd(Object.fromEntries(data))
+    } else {
+      onLocalEventEdit({
+        id: localEventEditableID,
+        ...Object.fromEntries(data)
+      })
+    }
+
     form.current.reset()
+  }
+
+  const handleReset = function () {
+    onEditID(null)
   }
 
   return (
     <aside className="panel">
-      <form ref={form} onSubmit={handleSubmit} noValidate={true}>
+      <form
+        ref={form}
+        onSubmit={handleSubmit}
+        noValidate={true}
+        onReset={handleReset}
+      >
         <p className="form-group">
           <label htmlFor="title">Titre</label>
           <input type="text" name="title" id="title" />
@@ -49,16 +81,18 @@ export default function Panel({ map, onLocalEventAdd }) {
         </div> */}
         <p className="form-group">
           <label htmlFor="description">Déscription</label>
-          <textarea
-            name="description"
-            id="description"
-            cols="30"
-            rows="10"
-          ></textarea>
+          <textarea name="description" id="description" cols="30" rows="10" />
         </p>
-        <button className="btn btn-primary" type="submit">
-          Enregistrer
-        </button>
+        <div className="g2 gap1">
+          <button className="btn btn-primary" type="submit">
+            Enregistrer
+          </button>
+          {localEventEditableID && (
+            <button className="btn btn" type="reset">
+              Annuler
+            </button>
+          )}
+        </div>
       </form>
     </aside>
   )

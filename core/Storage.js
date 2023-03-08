@@ -1,3 +1,7 @@
+export const StorageKey = Object.freeze({
+  LOCAL_EVENT: 'localevent'
+})
+
 export default class Storage {
   static set(key, value) {
     try {
