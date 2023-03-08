@@ -6,7 +6,15 @@ export default function OutlinerItem({
   onEditID,
   localEventEditableID
 }) {
-  const handleDelete = function (localEvent) {
+  const handleEdit = function () {
+    onEditID(localEvent.id)
+  }
+
+  const handleCancel = function () {
+    onEditID(null)
+  }
+
+  const handleDelete = function () {
     if (!confirm('Voulez-vous vraiment supprimer ?')) return
     onLocalEventDelete(localEvent)
   }
@@ -20,22 +28,16 @@ export default function OutlinerItem({
       <h2>{localEvent.title}</h2>
       <div className="outliner-item-actions">
         {!isEditable && (
-          <button
-            className="btn btn-primary small"
-            onClick={() => onEditID(localEvent.id)}
-          >
+          <button className="btn btn-primary small" onClick={handleEdit}>
             Modifier
           </button>
         )}
         {isEditable && (
-          <button className="btn btn small" onClick={() => onEditID(null)}>
+          <button className="btn btn small" onClick={handleCancel}>
             Annuler
           </button>
         )}
-        <button
-          className="btn btn-danger small"
-          onClick={() => handleDelete(localEvent)}
-        >
+        <button className="btn btn-danger small" onClick={handleDelete}>
           Supprimer
         </button>
       </div>

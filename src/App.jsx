@@ -28,8 +28,11 @@ export default function App() {
 
   const handleLocalEventEdit = function (localEvent) {
     const newLocalEvents = localEvents.map((le) => {
-      if (le.id !== localEvent.id) return le
-      return localEvent
+      if (le.id !== localEventEditableID) return le
+      return {
+        id: localEventEditableID,
+        ...localEvent
+      }
     })
     setLocalEvents(Storage.set(StorageKey.LOCAL_EVENT, newLocalEvents))
   }

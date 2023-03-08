@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 export default function Panel({
   map,
@@ -34,10 +34,7 @@ export default function Panel({
     if (!localEventEditableID) {
       onLocalEventAdd(Object.fromEntries(data))
     } else {
-      onLocalEventEdit({
-        id: localEventEditableID,
-        ...Object.fromEntries(data)
-      })
+      onLocalEventEdit(Object.fromEntries(data))
     }
 
     form.current.reset()
