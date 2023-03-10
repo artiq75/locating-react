@@ -66,7 +66,7 @@ export default function Panel({
             <input type="number" name="latitude" id="latitude" />
           </p>
         </div>
-        {/* <div className="g2 gap1">
+        <div className="g2 gap1">
           <p className="form-group">
             <label htmlFor="start">Début</label>
             <input type="datetime-local" name="start" id="start" />
@@ -75,7 +75,7 @@ export default function Panel({
             <label htmlFor="end">Fin</label>
             <input type="datetime-local" name="end" id="end" />
           </p>
-        </div> */}
+        </div>
         <p className="form-group">
           <label htmlFor="description">Déscription</label>
           <textarea name="description" id="description" cols="30" rows="10" />

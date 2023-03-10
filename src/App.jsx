@@ -8,7 +8,6 @@ import localEventReducer, {
 } from './reducers/localEventReducer'
 
 export const LocalEventContext = createContext({
-  localEvents: localEventInitialState,
   localEventEditableID: null,
   onEditID: () => {},
   onLocalEventDelete: () => {}
@@ -64,7 +63,7 @@ export default function App() {
           onLocalEventDeleteAll={handleLocalEventDeleteAll}
         />
       </LocalEventContext.Provider>
-      <Viewport ref={map} />
+      <Viewport ref={map} localEvents={localEvents} />
       <Panel
         map={map}
         localEvents={localEvents}

@@ -18,20 +18,28 @@ export default function localEventReducer(state, action) {
         id: crypto.randomUUID(),
         ...action.payload
       }
-      return Storage.set(StorageKey.LOCAL_EVENT, [newLocalEvent, ...state.localEvents])
+      return {
+        localEvents: Storage.set(StorageKey.LOCAL_EVENT, [newLocalEvent, ...state.localEvents])
+      }
     case localEventReducerAction.EDIT:
       const newEditState = state.localEvents.map((localEvent) => {
         if (localEvent.id !== action.payload.id) return localEvent
         return localEvent
       })
-      return Storage.set(StorageKey.LOCAL_EVENT, newEditState)
+      return {
+        localEvents: Storage.set(StorageKey.LOCAL_EVENT, newEditState)
+      }
     case localEventReducerAction.DELETE:
       const newDeleteState = state.localEvents.filter(
         (localEvent) => localEvent.id !== action.payload.id
       )
-      return Storage.set(StorageKey.LOCAL_EVENT, newDeleteState)
+      return {
+        localEvents: Storage.set(StorageKey.LOCAL_EVENT, newDeleteState)
+      }
     case localEventReducerAction.RESET:
-      return Storage.set(StorageKey.LOCAL_EVENT, [])
+      return {
+        localEvents: Storage.set(StorageKey.LOCAL_EVENT, [])
+      }
     default:
       throw new Error(`L'action ${action.type} est inconnue!`)
   }
