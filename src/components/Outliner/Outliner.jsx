@@ -1,9 +1,10 @@
+import { localEventReducerAction } from '../../reducers/localEventReducer'
 import OutlinerItem from './OutlinerItem'
 
-export default function Outliner({ localEvents, onLocalEventDeleteAll }) {
+export default function Outliner({ localEvents, dispatch }) {
   const handleDeleteAll = function () {
     if (!confirm('Voulez-vous vraiment tout supprimer?')) return
-    onLocalEventDeleteAll()
+    dispatch({ type: localEventReducerAction.RESET })
   }
 
   return (

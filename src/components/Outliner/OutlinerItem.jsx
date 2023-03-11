@@ -1,8 +1,9 @@
 import { useContext, useMemo } from 'react'
 import { LocalEventContext } from '../../App'
+import { localEventReducerAction } from '../../reducers/localEventReducer'
 
 export default function OutlinerItem({ localEvent }) {
-  const { localEventEditableID, onLocalEventDelete, onEditID } =
+  const { localEventEditableID, onEditID, dispatch } =
     useContext(LocalEventContext)
 
   const handleEdit = function () {
@@ -15,7 +16,7 @@ export default function OutlinerItem({ localEvent }) {
 
   const handleDelete = function () {
     if (!confirm('Voulez-vous vraiment supprimer ?')) return
-    onLocalEventDelete(localEvent)
+    dispatch({ type: localEventReducerAction.DELETE, payload: localEvent })
   }
 
   const isEditable = useMemo(() => {

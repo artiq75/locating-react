@@ -24,7 +24,7 @@ export default function localEventReducer(state, action) {
     case localEventReducerAction.EDIT:
       const newEditState = state.localEvents.map((localEvent) => {
         if (localEvent.id !== action.payload.id) return localEvent
-        return localEvent
+        return action.payload
       })
       return {
         localEvents: Storage.set(StorageKey.LOCAL_EVENT, newEditState)

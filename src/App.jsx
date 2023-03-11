@@ -3,14 +3,13 @@ import Viewport from './components/Viewport'
 import Panel from './components/Panel'
 import { createContext, useMemo, useReducer, useRef, useState } from 'react'
 import localEventReducer, {
-  localEventReducerAction,
   localEventInitialState
 } from './reducers/localEventReducer'
 
 export const LocalEventContext = createContext({
   localEventEditableID: null,
   onEditID: () => {},
-  onLocalEventDelete: () => {}
+  dispatch: () => {}
 })
 
 export default function App() {
@@ -21,54 +20,24 @@ export default function App() {
   )
   const map = useRef(null)
 
-  const handleLocalEventAdd = function (localEvent) {
-    dispatch({ type: localEventReducerAction.ADD, payload: localEvent })
-  }
-
-  const handleLocalEventEdit = function (localEvent) {
-    dispatch({
-      type: localEventReducerAction.EDIT,
-      payload: {
-        id: localEventEditableID,
-        ...localEvent
-      }
-    })
-  }
-
-  const handleLocalEventDelete = function (localEvent) {
-    dispatch({ type: localEventReducerAction.DELETE, payload: localEvent })
-  }
-
-  const handleLocalEventDeleteAll = function () {
-    dispatch({ type: localEventReducerAction.RESET })
-  }
-
-  const handleEditID = function (id) {
-    setLocalEventEditableID(id)
-  }
-
   const value = useMemo(() => {
     return {
+      dispatch,
       localEventEditableID,
-      onLocalEventDelete: handleLocalEventDelete,
-      onEditID: handleEditID
+      onEditID: setLocalEventEditableID
     }
   }, [localEventEditableID])
 
   return (
     <>
       <LocalEventContext.Provider value={value}>
-        <Outliner
-          localEvents={localEvents}
-          onLocalEventDeleteAll={handleLocalEventDeleteAll}
-        />
+        <Outliner localEvents={localEvents} dispatch={dispatch} />
       </LocalEventContext.Provider>
       <Viewport ref={map} localEvents={localEvents} />
       <Panel
         map={map}
         localEvents={localEvents}
-        onLocalEventAdd={handleLocalEventAdd}
-        onLocalEventEdit={handleLocalEventEdit}
+        dispatch={dispatch}
         localEventEditableID={localEventEditableID}
         onEditID={setLocalEventEditableID}
       />

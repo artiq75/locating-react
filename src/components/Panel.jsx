@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
+import { localEventReducerAction } from '../reducers/localEventReducer'
 
 export default function Panel({
   map,
   localEvents,
-  onLocalEventAdd,
-  onLocalEventEdit,
+  dispatch,
   localEventEditableID,
   onEditID
 }) {
@@ -32,9 +32,18 @@ export default function Panel({
     const data = new FormData(form.current)
 
     if (!localEventEditableID) {
-      onLocalEventAdd(Object.fromEntries(data))
+      dispatch({
+        type: localEventReducerAction.ADD,
+        payload: Object.fromEntries(data)
+      })
     } else {
-      onLocalEventEdit(Object.fromEntries(data))
+      dispatch({
+        type: localEventReducerAction.EDIT,
+        payload: {
+          id: localEventEditableID,
+          ...Object.fromEntries(data)
+        }
+      })
     }
 
     form.current.reset()
