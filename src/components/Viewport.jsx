@@ -1,9 +1,10 @@
 import { forwardRef, useEffect, useRef } from 'react'
 import { generatePopupHTML } from '../../core/functions'
 import Map from '../../core/Map'
+import Removable from '../../core/Removable'
 
 const Viewport = forwardRef(({ localEvents }, ref) => {
-  const markers = useRef([])
+  const markers = useRef(new Removable())
 
   useEffect(() => {
     ref.current = new Map({
@@ -17,25 +18,18 @@ const Viewport = forwardRef(({ localEvents }, ref) => {
   }, [])
 
   useEffect(() => {
-    if (ref.current) {
-      if (markers.current) {
-        for (const marker of markers.current) {
-          marker.remove()
-        }
-      }
-      for (const localEvent of localEvents) {
-        markers.current = [
-          ref.current.marker({
+    if (!ref.current) return
+    markers.current.clear()
+    for (const localEvent of localEvents) {
+      markers.current.add(
+        ref.current
+          .marker({
             lng: localEvent.longitude,
-            lat: localEvent.latitude,
+            lat: localEvent.latitude
           })
-            .setPopup(
-              ref.current.popup().setHTML(generatePopupHTML(localEvent))
-            )
-            .addTo(ref.current),
-          ...markers.current
-        ]
-      }
+          .setPopup(ref.current.popup().setHTML(generatePopupHTML(localEvent)))
+          .addTo(ref.current)
+      )
     }
   }, [localEvents])
 

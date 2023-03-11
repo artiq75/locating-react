@@ -50,7 +50,9 @@ export default function Panel({
   }
 
   const handleReset = function () {
-    onEditID(null)
+    if (localEventEditableID) {
+      onEditID(null)
+    }
   }
 
   return (

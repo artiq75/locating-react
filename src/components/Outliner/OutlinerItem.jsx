@@ -1,8 +1,8 @@
-import { useContext, useMemo } from 'react'
+import { memo, useContext, useMemo } from 'react'
 import { LocalEventContext } from '../../App'
 import { localEventReducerAction } from '../../reducers/localEventReducer'
 
-export default function OutlinerItem({ localEvent }) {
+const OutlinerItem = memo(function ({ localEvent }) {
   const { localEventEditableID, onEditID, dispatch } =
     useContext(LocalEventContext)
 
@@ -22,7 +22,7 @@ export default function OutlinerItem({ localEvent }) {
   const isEditable = useMemo(() => {
     return localEvent.id === localEventEditableID
   }, [localEvent, localEventEditableID])
-
+  
   return (
     <article className="outliner-item" key={localEvent.id}>
       <h2>{localEvent.title}</h2>
@@ -43,4 +43,6 @@ export default function OutlinerItem({ localEvent }) {
       </div>
     </article>
   )
-}
+})
+
+export default OutlinerItem
